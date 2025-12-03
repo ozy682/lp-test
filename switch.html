@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LPサンプル - UTMでLINEリンク切替</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 40px;
+        background: #f7f7f7;
+      }
+      h1 {
+        color: #333;
+      }
+      .btn-line {
+        display: inline-block;
+        padding: 14px 24px;
+        background: #06c755;
+        color: white;
+        font-size: 1.2em;
+        border-radius: 8px;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    
+    <h1>LINE友だち追加リンク（UTMで切替）</h1>
+    <p>このリンクは URL の utm_source によって動的に変わります。</p>
+    
+    <!-- ★ 友だち追加リンク（この href はデフォルト値） -->
+    <a id="lineFriendLink" class="btn-line" href="https://line.me/R/ti/p/@default" target="_blank">
+      👉 LINEで友だち追加
+    </a>
+    
+    <p style="margin-top: 40px; color:#555;">
+      例）動作確認URL：<br>
+      <code>?utm_source=twitter</code><br>
+      <code>?utm_source=google</code><br>
+      <code>?utm_source=facebook</code>
+    </p>
+    
+    <script>
+      // URLパラメータ取得
+      function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+      }
+      
+      // utm_source
+      const utmSource = getQueryParam('utm_source');
+      
+      // リンク要素
+      const lineLinkEl = document.getElementById('lineFriendLink');
+      
+      // ★ UTMごとのLINE公式アカウントURLをマッピング
+      const lineUrlMap = {
+        twitter:  'https://line.me/R/ti/p/@line_id_for_twitter',
+        google:   'https://line.me/R/ti/p/@line_id_for_google',
+        facebook: 'https://line.me/R/ti/p/@line_id_for_facebook',
+      };
+      
+      // デフォルト
+      const defaultLineUrl = 'https://line.me/R/ti/p/@default';
+      
+      // 書き換え処理
+      if (lineLinkEl) {
+        const newHref = (utmSource && lineUrlMap[utmSource])
+        ? lineUrlMap[utmSource]
+        : defaultLineUrl;
+        
+        lineLinkEl.href = newHref;
+      }
+    </script>
+    
+  </body>
+</html>
